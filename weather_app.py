@@ -1,9 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 
-
 def tell_weather():
-    import requests
+    import requests, json
     api_key = "e57ac6a3ce57c0e6706f2c7992908696"
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
     city_name = city_field.get()
@@ -14,20 +13,23 @@ def tell_weather():
         y = x["main"]
         current_temperature = y["temp"]
         current_pressure = y["pressure"]
-        current_humidiy = y["humidity"]
+        current_humidity = y["humidity"]
         z = x["weather"]
         weather_description = z[0]["description"]
+        wind_speed = x["wind"]["speed"]
 
         # Clear fields before inserting new data
         temp_field.delete(0, END)
         atm_field.delete(0, END)
         humid_field.delete(0, END)
         desc_field.delete(0, END)
+        wind_field.delete(0, END)
 
         temp_field.insert(0, str(current_temperature) + " Kelvin")
         atm_field.insert(0, str(current_pressure) + " hPa")
-        humid_field.insert(0, str(current_humidiy) + " %")
+        humid_field.insert(0, str(current_humidity) + " %")
         desc_field.insert(0, str(weather_description))
+        wind_field.insert(0, str(wind_speed) + " m/s")
     else:
         messagebox.showerror("Error", "City Not Found \nPlease enter a valid city name")
         city_field.delete(0, END)
@@ -38,6 +40,7 @@ def clear_all():
     atm_field.delete(0, END)
     humid_field.delete(0, END)
     desc_field.delete(0, END)
+    wind_field.delete(0, END)
     city_field.focus_set()
 
 if __name__ == "__main__":
@@ -48,7 +51,7 @@ if __name__ == "__main__":
     root.configure(background="light blue")
 
     # Set the configuration of GUI window
-    root.geometry("450x300");
+    root.geometry("450x350")
 
     # Create a Weather GUI Application label
     headlabel = Label(root, text="Weather GUI Application", fg='white', bg='black', font=('Helvetica', 16, 'bold'))
@@ -83,6 +86,11 @@ if __name__ == "__main__":
     label5.grid(row=4, column=0, padx=10, pady=5, sticky="E")
     desc_field = Entry(input_frame, font=('Helvetica', 12))
     desc_field.grid(row=4, column=1, ipadx="50", pady=5)
+
+    label6 = Label(input_frame, text="Wind speed:", fg='white', bg='dark gray', font=('Helvetica', 12, 'bold'))
+    label6.grid(row=5, column=0, padx=10, pady=5, sticky="E")
+    wind_field = Entry(input_frame, font=('Helvetica', 12))
+    wind_field.grid(row=5, column=1, ipadx="50", pady=5)
 
     # Create a frame for buttons
     button_frame = Frame(root, bg='light blue')
